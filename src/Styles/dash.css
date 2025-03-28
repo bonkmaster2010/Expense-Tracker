@@ -1,0 +1,133 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #121212;
+    color: #eaeaea;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.conts{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    width: 80%;
+    max-width: 1200px;
+    margin-top: 20px;
+    padding: 30px;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Heading */
+h1 {
+    display: flex;
+    align-self: center;
+    text-align: center;
+    font-size: 36px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    margin-right: 55px;
+}
+
+/* Input Fields */
+.dashboard-container input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #f1f1f1;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Input focus styling */
+.dashboard-container input:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Total Expenses Text */
+.dashboard-container p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff5e5e;
+}
+
+
+#high {
+    font-size: 16px;
+    color: rgb(8, 201, 8);
+    font-weight: bold;
+}
+  
+#neutral {
+    font-size: 16px;
+    color: rgb(255, 170, 12); 
+    font-weight: bold;
+}
+  
+#low {
+    font-size: 16px;
+    color: rgb(255, 0, 0);
+    font-weight: bold;
+}
+
+#low, #high, #neutral{
+    opacity: 0.6;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .dashboard-container {
+        margin-top: 130px;
+    }
+
+    .dashboard-container input {
+        margin-bottom: 10px;
+    }
+    h1{
+        display: flex;
+        align-self: center;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        margin-top: 70px; 
+    }
+    h1{
+        margin-top: 100px;
+        display: flex;
+        align-self: center;
+    }
+}

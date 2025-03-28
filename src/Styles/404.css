@@ -1,0 +1,13 @@
+
+.notfound{
+    margin-bottom: 300px;
+}
+
+.notfound h1{
+  font-size: 55px;
+  opacity: 0.5;
+}
+
+.notfound p{
+    opacity: 0.4;
+}

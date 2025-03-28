@@ -1,0 +1,214 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #121212;
+    color: #eaeaea;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 0;
+    overflow: auto;
+}
+
+h1 {
+    font-size: 36px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Expense Input Controls (Fixed) */
+.controls {
+    width: 400px;
+    max-width: 100%;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    top: 40px;
+    z-index: 1000;
+    margin-top: 30px;
+}
+
+.controls input,
+.controls button,
+.controls select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #f1f1f1;
+    transition: all 0.3s ease;
+}
+
+.controls input:focus,
+.controls button:focus,
+.controls select:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+.controls button {
+    background-color: #ff5e5e;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.controls button:hover {
+    background-color: #e53e3e;
+    transform: translateY(-3px);
+}
+
+.controls select {
+    margin-bottom: 15px; 
+}
+
+/* Expense List (Scrollable below fixed elements) */
+.expense-cont {
+    width: 400px;
+    max-width: 100%;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Filter */
+.filter {
+    width: 400px;
+    max-width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+.filter select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #f1f1f1;
+    transition: all 0.3s ease;
+    appearance: none; /* Removes default dropdown arrow */
+    -webkit-appearance: none; /* Removes default dropdown arrow for Safari */
+    -moz-appearance: none; /* Removes default dropdown arrow for Firefox */
+    cursor: pointer; /* Makes the cursor pointer when hovering */
+    position: relative;
+}
+
+.filter select:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Add a custom arrow icon */
+.filter select::after {
+    content: ' ▼';
+    font-size: 16px;
+    color: #f1f1f1;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+/* Style the dropdown (appears when clicked) */
+.filter select:focus::after {
+    color: #ff5e5e;
+}
+
+
+.cont {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+    gap: 15px;
+    align-items: center;
+    padding: 15px;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    border: 1px solid #444;
+    transition: all 0.3s ease;
+}
+
+.cont:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.cont .labels h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff5e5e;
+    margin-bottom: 5px;
+}
+
+.cont .labels p {
+    font-size: 14px;
+    color: #d1d9e3;
+}
+
+#delete {
+    background-color: #ff4747;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#delete:hover {
+    background-color: #e53e3e;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .controls{
+        width: 100%;
+        margin-top: 130px;
+    }
+
+    .cont {
+        grid-template-columns: 1fr 2fr 2fr 2fr;
+    }
+
+    .controls select,
+    .expense-cont select,
+    .filter select {
+        margin-bottom: 10px; /* Adjust select element spacing */
+    }
+}
+
+@media (max-width: 600px) {
+    .controls{
+        margin-top: 130px;
+    }
+}
