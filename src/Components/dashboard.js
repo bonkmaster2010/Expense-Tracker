@@ -1,103 +1,108 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import DashChart from "../Extra/Recharts";
-import '../Styles/dash.css';
+import "../Styles/dash.css";
 
 function Dash() {
-
-  // Accessing state from the location to get expenses and categories
   const location = useLocation();
-  const { expenses, categories } = location.state || { expenses: [], categories: [] };
+  const { expenses: initialExpenses = [], categories: initialCategories = [] } = location.state || {};
 
-  // State for the total expenses, income, and budget
-  let [total, setTotal] = useState(() => {
+  const [expenses, setExpenses] = useState(() => {
     const savedExpenses = localStorage.getItem("expenses");
-    return savedExpenses ? JSON.parse(savedExpenses) : expenses;
+    return savedExpenses ? JSON.parse(savedExpenses) : initialExpenses;
   });
 
-  let [income, setIncome] = useState(localStorage.getItem("income") || "");
-  let [budget, setBudget] = useState(localStorage.getItem("budget") || "");
+  const [income, setIncome] = useState(() => localStorage.getItem("income") || "");
+  const [budget, setBudget] = useState(() => localStorage.getItem("budget") || "");
+  const [categories, setCategories] = useState(() => [...new Set(initialCategories)]);
 
-  // Persist expenses, income, and budget to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("expenses", JSON.stringify(total));
+    localStorage.setItem("expenses", JSON.stringify(expenses));
     localStorage.setItem("income", income);
     localStorage.setItem("budget", budget);
-  }, [total, income, budget]);
+  }, [expenses, income, budget]);
 
-  let totalEx = total.reduce((acc, cur) => acc + cur.price, 0);
+  const totalExpenses = useMemo(() => 
+    expenses.reduce((sum, { price }) => sum + price, 0)
+  , [expenses]);
 
-  const handleIncomeChange = (e) => {
-    setIncome(e.target.value);
-  };
+  const remainingBudget = useMemo(() => 
+    budget ? Number(budget) - totalExpenses : null
+  , [budget, totalExpenses]);
 
-  const handleBudgetChange = (e) => {
-    setBudget(e.target.value);
-  };
+  const handleIncomeChange = (e) => setIncome(e.target.value);
+  const handleBudgetChange = (e) => setBudget(e.target.value);
 
-  // Function to add a new expense and update categories dynamically
   const addExpense = (newExpense) => {
-    const updatedExpenses = [...total, newExpense];
-    setTotal(updatedExpenses);  // Update state with new expenses
-
-    if (!categories.includes(newExpense.cate)) {
-      categories.push(newExpense.cate);  // Add new category to the list
-    }
-
-    localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+    setExpenses((prev) => [...prev, newExpense]);
+    setCategories((prev) =>
+      prev.includes(newExpense.cate) ? prev : [...prev, newExpense.cate]
+    );
   };
 
-  // Prepare chart data by summing up expenses for each category
-  const chartData = categories.map((category) => {
-    const filteredExpenses = total.filter((expense) => expense.cate === category);
-    const totalExpense = filteredExpenses.reduce((acc, cur) => acc + cur.price, 0);
+  const chartData = useMemo(() => 
+    categories.map((category) => {
+      const total = expenses
+        .filter((expense) => expense.cate === category)
+        .reduce((sum, expense) => sum + expense.price, 0);
 
-    return {
-      name: category,
-      expense: totalExpense
-    };
-  });
+      return { name: category, expense: total };
+    })
+  , [expenses, categories]);
 
   return (
-    <>
-         <div className="conts">
-          <h1>Dashboard</h1>
-      <div className="dashboard-container">
-        {/* Input for income */}
-        <input
-          type="number"
-          value={income}
-          onChange={handleIncomeChange}
-          placeholder="Enter your income"
-        />
-        
-        {/* Input for budget */}
-        <input
-          type="number"
-          value={budget}
-          onChange={handleBudgetChange}
-          placeholder="Enter your budget"
-        />
-        
-        <p>Total Expenses: {totalEx}</p>
+    <div className="conts">
+      <h1>Dashboard</h1>
 
-        {/* Display budget status */}
-        {totalEx <= Number(budget) && <p>To reach your budget, you need: {budget - totalEx}</p>}
-        {totalEx < Number(budget) && (
-          <p id="high">You are under the budget!</p>
-        )}
-        {totalEx === Number(budget) && (
-          <p id="neutral">You reached your budget!</p>
-        )}
-        {totalEx > Number(budget) && (
-          <p id="low">You are over the budget!</p>
-        )}
+      <div className="dashboard-container">
+        <div className="input-group">
+          <input
+            type="number"
+            value={income}
+            onChange={handleIncomeChange}
+            placeholder="Enter your income"
+            className="input-field"
+          />
+          <input
+            type="number"
+            value={budget}
+            onChange={handleBudgetChange}
+            placeholder="Enter your budget"
+            className="input-field"
+          />
+        </div>
+
+        <div className="summary">
+          <p><strong>Income:</strong> {income || "-"}</p>
+          <p><strong>Budget:</strong> {budget || "-"}</p>
+          <p><strong>Total Expenses:</strong> {totalExpenses}</p>
+
+          {budget && (
+            <div className="budget-status">
+              {remainingBudget > 0 && (
+                <p id="high">✅ Under budget! ({remainingBudget} remaining)</p>
+              )}
+              {remainingBudget === 0 && (
+                <p id="neutral">⚡ You've exactly met your budget!</p>
+              )}
+              {remainingBudget < 0 && (
+                <p id="low">⚠️ Over budget by {Math.abs(remainingBudget)}!</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Render the chart with the data */}
-      <DashChart  chartData={chartData} />
+      <div className="chart-section">
+        {expenses.length > 0 ? (
+          <DashChart chartData={chartData} />
+        ) : (
+          <div className="no-expenses">
+            <p>No expenses to show yet 📊</p>
+          </div>
+        )}
+      </div>
     </div>
-    </>
   );
 }
 

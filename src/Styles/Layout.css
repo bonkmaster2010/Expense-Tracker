@@ -1,58 +1,72 @@
-nav {
-    position: fixed;             /* Fixes the nav to the top left */
-    top: 20px;                   /* Space from the top */
-    left: 20px;                  /* Space from the left */
-    background-color: rgba(40, 40, 40, 0.9);
-    padding: 15px 30px;
-    border-radius: 10px;
-    display: flex;
-    gap: 20px;
-    box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.2);
-    flex-wrap: wrap;             /* Allow wrapping for small screens */
-}
-
-.links {
+/* Minimal Navbar - Compact Style */
+:root {
+    --nav-bg: rgba(25, 25, 25, 0.96);
+    --nav-text: #e0e0e0;
+    --nav-accent: #00f0ff;
+    --nav-accent-dark: #00b4c8;
+  }
+  
+  nav {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--nav-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px; /* Pill shape */
+    display: inline-flex; /* Fits content width */
+    gap: 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1000;
+    white-space: nowrap;
+  }
+  
+  .links {
     text-decoration: none;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 10px 15px;
-    transition: 0.3s ease-in-out;
+    color: var(--nav-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    transition: all 0.25s ease;
     position: relative;
-}
-
-.links::after {
+  }
+  
+  .links:hover {
+    color: var(--nav-accent);
+    background: rgba(0, 240, 255, 0.08);
+  }
+  
+  .links.active {
+    color: white;
+    background: rgba(0, 240, 255, 0.15);
+    font-weight: 600;
+  }
+  
+  /* Tiny underline for active state */
+  .links.active::after {
     content: '';
     position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 0%;
-    height: 3px;
-    background: cyan;
-    transition: 0.3s ease-in-out;
-    transform: translateX(-50%);
-}
-
-.links:hover {
-    color: cyan;
-}
-
-.links:hover::after {
-    width: 100%;
-}
-
-/* Media query for smaller screens */
-@media (max-width: 768px) {
+    bottom: 2px;
+    left: 1.2rem;
+    right: 1.2rem;
+    height: 2px;
+    background: var(--nav-accent);
+    border-radius: 2px;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
     nav {
-        top: 0;                   
-        left: 0;                   
-        right: 0;                  
-        padding: 10px 20px;        
-        justify-content: center;   
-        flex-direction: column;   
+      top: 10px;
+      padding: 0.5rem 1rem;
     }
+    
     .links {
-        font-size: 16px;         
-        padding: 10px 0;          
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
-}
+  }

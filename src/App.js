@@ -2,110 +2,146 @@ import React, { useState, useEffect } from "react";
 import "./Styles/main.css";
 
 function App() {
-  // State for expenses and various input fields
-  const [cont, setCont] = useState(() => {
-    // Load expenses from localStorage if available
-    const savedExpenses = localStorage.getItem("expenses");
-    return savedExpenses ? JSON.parse(savedExpenses) : [];
+  // State for expenses and inputs
+  const [expenses, setExpenses] = useState(() => {
+    const saved = localStorage.getItem("expenses");
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [name, setName] = useState("");
-  const [cate, setCate] = useState("");
+  const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [price, setPrice] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("date"); // Sort by date or price
 
+  // Save expenses to localStorage whenever they change
   useEffect(() => {
-    // Save expenses to localStorage whenever they change
-    localStorage.setItem("expenses", JSON.stringify(cont));
-  }, [cont]);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+  }, [expenses]);
 
-  // Function to add a new expense
-  function add() {
-    // Check if all fields are filled
-    if (!name || !cate || !date || !price) {
+  // Add a new expense
+  const addExpense = () => {
+    if (!name || !category || !date || !price) {
       alert("Please fill all inputs");
       return;
     }
 
-    // Ensure price is a valid number
     const numericPrice = parseFloat(price);
     if (isNaN(numericPrice) || numericPrice <= 0) {
       alert("Please enter a valid price");
       return;
     }
 
-    // Add the new expense to the list and reset input fields
-    setCont((prev) => [...prev, { name, cate, date, price: numericPrice }]);
+    const newExpense = { name, category, date, price: numericPrice };
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+
+    // Reset inputs
     setName("");
-    setCate("");
+    setCategory("");
     setDate("");
     setPrice("");
-  }
+  };
 
-  // Function to remove an expense by index
-  function remove(index) {
-    setCont(cont.filter((_, i) => i !== index));
-  }
+  // Remove an expense by index
+  const removeExpense = (index) => {
+    setExpenses((prevExpenses) => prevExpenses.filter((_, i) => i !== index));
+  };
 
-  // Filter expenses by category
-  const filteredExpenses = filterCategory === "All" ? cont : cont.filter((item) => item.cate === filterCategory);
+  // Filtered expenses based on selected category
+  const filteredExpenses = filterCategory === "All"
+    ? expenses
+    : expenses.filter((expense) => expense.category === filterCategory);
+
+  // Sort expenses
+  const sortedExpenses = [...filteredExpenses].sort((a, b) => {
+    if (sortBy === "price") {
+      return b.price - a.price;
+    }
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  // Unique category options for filter dropdown
+  const categoryOptions = ["All", ...new Set(expenses.map((e) => e.category))];
 
   return (
-    <>
+    <div className="app-container">
       {/* Expense Input Controls */}
       <div className="expense-inputs">
         <div className="controls">
-          {/* Input fields for adding a new expense */}
-          <input value={name} placeholder="Name" onChange={(e) => setName(e.target.value)} required />
-          <input id="Cate" placeholder="Category" value={cate} onChange={(e) => setCate(e.target.value)} required />
-          <input id="date" placeholder="YY/MM/DD" value={date} onChange={(e) => setDate(e.target.value)} required />
-          <input id="price" placeholder="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-          {/* Add button to trigger add function */}
-          <button onClick={add}>Add</button>
+          <input
+            value={name}
+            placeholder="Name"
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            value={category}
+            placeholder="Category"
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          />
+          <input
+            value={date}
+            placeholder="YY/MM/DD"
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
+          <input
+            value={price}
+            placeholder="Price"
+            type="number"
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+          <button onClick={addExpense}>Add</button>
         </div>
       </div>
 
-      {/* Filter Section */}
-      <div className="filter">
-        {/* Dropdown to select category filter */}
+      {/* Filter and Sort Section */}
+      <div className="filter-sort">
         <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-          <option value="All">All</option>
-          {/* Dynamically generate category options from the list of expenses */}
-          {[...new Set(cont.map((item) => item.cate))].map((category, index) => (
-            <option key={index} value={category}>{category}</option>
+          {categoryOptions.map((cat, index) => (
+            <option key={index} value={cat}>
+              {cat}
+            </option>
           ))}
+        </select>
+
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="date">Sort by Date</option>
+          <option value="price">Sort by Price</option>
         </select>
       </div>
 
-      {/* Expense List */}
-      <div className="expense-cont">
-        {/* Map through filtered expenses and display each item */}
-        {filteredExpenses.map((item, index) => (
-          <div className="cont" key={index}>
-            {/* Display expense details */}
-            <div className="labels">
-              <h3>Name</h3>
-              <p>{item.name}</p>
-            </div>
-            <div id="Cate" className="labels">
-              <h3>Category</h3>
-              <p>{item.cate}</p>
-            </div>
-            <div id="date" className="labels">
-              <h3>Date</h3>
-              <p>{item.date}</p>
-            </div>
-            <div id="price" className="labels">
-              <h3>Price</h3>
-              <p>{item.price}</p>
-            </div>
-            {/* Button to delete the expense */}
-            <button id="delete" onClick={() => remove(index)}>Delete</button>
-          </div>
-        ))}
+      {/* Expense Table */}
+      <div className="expense-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Price</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedExpenses.map((expense, index) => (
+              <tr key={index}>
+                <td>{expense.name}</td>
+                <td>{expense.category}</td>
+                <td>{expense.date}</td>
+                <td>${expense.price.toFixed(2)}</td>
+                <td>
+                  <button onClick={() => removeExpense(index)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </>
+    </div>
   );
 }
 
