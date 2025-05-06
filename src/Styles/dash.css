@@ -52,7 +52,9 @@ h1 {
 
 /* Input Fields */
 .dashboard-container input {
-  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  width: 500px;
   padding: 14px;
   font-size: 16px;
   border-radius: 8px;
