@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import Dash from "./Components/dashboard";
 import "./Styles/main.css";
 
 function App() {
-  // State for expenses and inputs
   const [expenses, setExpenses] = useState(() => {
     const saved = localStorage.getItem("expenses");
     return saved ? JSON.parse(saved) : [];
@@ -13,14 +13,12 @@ function App() {
   const [date, setDate] = useState("");
   const [price, setPrice] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
-  const [sortBy, setSortBy] = useState("date"); // Sort by date or price
+  const [sortBy, setSortBy] = useState("date");
 
-  // Save expenses to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  // Add a new expense
   const addExpense = () => {
     if (!name || !category || !date || !price) {
       alert("Please fill all inputs");
@@ -33,27 +31,32 @@ function App() {
       return;
     }
 
-    const newExpense = { name, category, date, price: numericPrice };
+    const newExpense = {
+      name: name.trim(),
+      category: category.trim(),
+      date,
+      price: numericPrice,
+    };
     setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
 
-    // Reset inputs
     setName("");
     setCategory("");
     setDate("");
     setPrice("");
   };
 
-  // Remove an expense by index
   const removeExpense = (index) => {
     setExpenses((prevExpenses) => prevExpenses.filter((_, i) => i !== index));
   };
 
-  // Filtered expenses based on selected category
-  const filteredExpenses = filterCategory === "All"
-    ? expenses
-    : expenses.filter((expense) => expense.category === filterCategory);
+  const filteredExpenses =
+    filterCategory === "All"
+      ? expenses
+      : expenses.filter(
+          (expense) =>
+            expense.category.toLowerCase() === filterCategory.toLowerCase()
+        );
 
-  // Sort expenses
   const sortedExpenses = [...filteredExpenses].sort((a, b) => {
     if (sortBy === "price") {
       return b.price - a.price;
@@ -61,12 +64,13 @@ function App() {
     return new Date(b.date) - new Date(a.date);
   });
 
-  // Unique category options for filter dropdown
-  const categoryOptions = ["All", ...new Set(expenses.map((e) => e.category))];
+  const categoryOptions = [
+    "All",
+    ...new Set(expenses.map((e) => e.category.trim())),
+  ];
 
   return (
     <div className="app-container">
-      {/* Expense Input Controls */}
       <div className="expense-inputs">
         <div className="controls">
           <input
@@ -98,9 +102,11 @@ function App() {
         </div>
       </div>
 
-      {/* Filter and Sort Section */}
       <div className="filter-sort">
-        <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+        >
           {categoryOptions.map((cat, index) => (
             <option key={index} value={cat}>
               {cat}
@@ -114,7 +120,6 @@ function App() {
         </select>
       </div>
 
-      {/* Expense Table */}
       <div className="expense-table">
         <table>
           <thead>
@@ -140,6 +145,12 @@ function App() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Render the Dash Component */}
+      <div className="chart-container">
+        <h2>Category Expense Breakdown</h2>
+        <Dash expenses={expenses} />
       </div>
     </div>
   );
