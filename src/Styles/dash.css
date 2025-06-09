@@ -24,6 +24,7 @@ body {
   align-items: center;
   width: 100%;
   margin-top: 40px;
+  padding: 0 10px;
 }
 
 /* Heading */
@@ -52,9 +53,8 @@ h1 {
 
 /* Input Fields */
 .dashboard-container input {
-  margin-right: auto;
-  margin-left: auto;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   padding: 14px;
   font-size: 16px;
   border-radius: 8px;
@@ -62,7 +62,7 @@ h1 {
   background-color: #2c2c2c;
   color: #f1f1f1;
   transition: border-color 0.3s, box-shadow 0.3s;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
 }
 
 .dashboard-container input:focus {
@@ -101,38 +101,7 @@ h1 {
   color: #ff3333;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .dashboard-container {
-      margin-top: 50px;
-      padding: 25px 15px;
-  }
-
-  h1 {
-      font-size: 2rem;
-      margin-top: 20px;
-  }
-
-  .dashboard-container input {
-      font-size: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-container {
-      margin-top: 70px;
-  }
-
-  .dashboard-container input {
-      padding: 12px;
-      font-size: 14px;
-  }
-
-  h1 {
-      font-size: 1.8rem;
-  }
-}
-
+/* Chart Section */
 .chart-section {
   width: 100%;
   display: flex;
@@ -141,9 +110,49 @@ h1 {
   margin-top: 20px;
 }
 
+/* No Expenses Text */
 .no-expenses {
   text-align: center;
   font-size: 18px;
   color: #bbb;
   margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 25px 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 20px;
+  }
+
+  .dashboard-container input {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .dashboard-container {
+    padding: 20px 10px;
+    margin-top: 40px;
+  }
+
+  .dashboard-container input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .dashboard-container p,
+  #high,
+  #neutral,
+  #low {
+    font-size: 15px;
+  }
 }

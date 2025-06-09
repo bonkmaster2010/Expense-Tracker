@@ -1,13 +1,31 @@
-
-.notfound{
-    margin-bottom: 300px;
+.notfound {
+  margin: 100px auto;
+  text-align: center;
+  padding: 0 20px;
 }
 
-.notfound h1{
-  font-size: 55px;
+.notfound h1 {
+  font-size: 40px;
   opacity: 0.5;
+  margin-bottom: 10px;
 }
 
-.notfound p{
-    opacity: 0.4;
+.notfound p {
+  font-size: 16px;
+  opacity: 0.4;
+}
+
+/* Responsive tweak for larger screens */
+@media (min-width: 768px) {
+  .notfound h1 {
+    font-size: 55px;
+  }
+
+  .notfound p {
+    font-size: 18px;
+  }
+
+  .notfound {
+    margin-bottom: 300px;
+  }
 }
